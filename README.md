@@ -10,7 +10,7 @@ If not, please follow these steps:
 
 * Fork this repo to your local machine
 * Please prepending `SP1_DUMP=1` when running your normal program/script, it will output the `program.bin` and `stdin.bin` files to the current directory.
-  Please note these 2 files are ony generated when generating proofs (not in execution only mode).
+  Please note these 2 files are only generated when generating proofs (not in execution only mode).
 * Then copy them to this repository
 * Run the following commands in sequence:
  
