@@ -4,7 +4,7 @@ A forkable repository to report SP1 issues.
 
 ## Steps
 
-First, please check if your issue isn't one in the [common issues](https://github.com/keep-starknet-strange/sp1-debug-issues/issues) page in our docs.
+First, please check if your issue isn't one in the [common issues](https://docs.succinct.xyz/docs/developers/common-issues) page in our docs.
 
 If not, please follow these steps:
 
