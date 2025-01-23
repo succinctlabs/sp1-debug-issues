@@ -1,0 +1,18 @@
+[package]
+version = "0.1.0"
+name = "sp1-debug-issues"
+edition = "2021"
+
+[dependencies]
+#sp1
+sp1-sdk = "4.0.0"
+sp1-prover = "4.0.0"
+
+anyhow = "1.0.83"
+bincode = "1.3.3"
+clap = { version = "4.5", features = ["derive", "env"] }
+hex-literal = "0.4.1"
+sha2 = "0.10"
+tracing = "0.1.40"
+dotenv = "0.15.0"
+
