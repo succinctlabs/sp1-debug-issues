@@ -1,7 +1,6 @@
 use std::{fs::File, io::Read};
 
-use anyhow::Result;
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use sp1_sdk::{Prover, ProverMode, SP1ProofMode, SP1Stdin};
 use universal_prover::UniversalProver;
 
@@ -11,7 +10,31 @@ mod universal_prover;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    pub mode: ProverMode,
+    /// The mode to run the prover in.
+    mode: ProverMode,
+
+    /// The proof mode to use.
+    #[arg(long, value_enum, default_value_t = ProofMode::Compressed)]
+    proof_mode: ProofMode,
+}
+
+#[derive(Debug, Clone, ValueEnum)]
+enum ProofMode {
+    Core,
+    Compressed,
+    Plonk,
+    Groth16,
+}
+
+impl From<ProofMode> for SP1ProofMode {
+    fn from(mode: ProofMode) -> Self {
+        match mode {
+            ProofMode::Core => SP1ProofMode::Core,
+            ProofMode::Compressed => SP1ProofMode::Compressed,
+            ProofMode::Plonk => SP1ProofMode::Plonk,
+            ProofMode::Groth16 => SP1ProofMode::Groth16,
+        }
+    }
 }
 
 fn main() -> Result<()> {
@@ -27,7 +50,7 @@ fn main() -> Result<()> {
     let (pk, vk) = client.setup(&program);
 
     let proof = client
-        .prove(&pk, &stdin, SP1ProofMode::Core)
+        .prove(&pk, &stdin, args.proof_mode.into())
         .expect("failed to generate proof");
     println!("Successfully generated proof!");
 
