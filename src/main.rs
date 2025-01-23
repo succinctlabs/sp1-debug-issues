@@ -1,10 +1,19 @@
 use std::{fs::File, io::Read};
 
+use anyhow::{bail, Result};
 use clap::{Parser, ValueEnum};
+use hex_literal::hex;
+use sha2::{Digest, Sha256};
 use sp1_sdk::{Prover, ProverMode, SP1ProofMode, SP1Stdin};
 use universal_prover::UniversalProver;
 
 mod universal_prover;
+
+const FIBONACCI_PROGRAM_HASH: [u8; 32] =
+    hex!("45d1d3889583ac22808eb5be7316fdeb2a936a3da1ca4931d462e4706833fc2e");
+
+const FIBONACCI_STDIN_HASH: [u8; 32] =
+    hex!("47ff30c843f47b09affa3f52f5b0035959540cc9d523c718577bb5c29933e726");
 
 /// The arguments for the command.
 #[derive(Parser, Debug)]
@@ -54,11 +63,9 @@ fn main() -> Result<()> {
         .expect("failed to generate proof");
     println!("Successfully generated proof!");
 
-    if !matches!(args.mode, ProverMode::Mock) {
-        // Verify the proof.
-        client.verify(&proof, &vk).expect("failed to verify proof");
-        println!("Successfully verified proof!");
-    }
+    // Verify the proof.
+    client.verify(&proof, &vk).expect("failed to verify proof");
+    println!("Successfully verified proof!");
 
     Ok(())
 }
@@ -69,6 +76,14 @@ fn read_program() -> Result<Vec<u8>> {
 
     file.read_to_end(&mut buffer)?;
 
+    let mut hasher = Sha256::new();
+    hasher.update(&buffer);
+    let hash = hasher.finalize();
+
+    if hash[..] == FIBONACCI_PROGRAM_HASH {
+        bail!("Please replace the program.bin file with yours.");
+    }
+
     Ok(buffer)
 }
 
@@ -77,6 +92,14 @@ fn read_stdin() -> Result<SP1Stdin> {
     let mut buffer = Vec::new();
 
     file.read_to_end(&mut buffer)?;
+
+    let mut hasher = Sha256::new();
+    hasher.update(&buffer);
+    let hash = hasher.finalize();
+
+    if hash[..] == FIBONACCI_STDIN_HASH {
+        bail!("Please replace the sdtin.bin file with yours.");
+    }
 
     let stdin = bincode::deserialize(&buffer)?;
 
