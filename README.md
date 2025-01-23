@@ -27,6 +27,9 @@ SP1 can be used in several different modes: Mock, CPU, GPU and the Prover Networ
   > To test on the Prover Network, you need to have an API key and set it to the `NETWORK_PRIVATE_KEY` environment variable
 * **GPU mode**  
   If you have a [supported GPU](https://docs.succinct.xyz/docs/generating-proofs/hardware-acceleration/cuda), Run `cargo run --release -- gpu` and see if it works.
+* **CPU mode**  
+  If testing on a GPU fails, Try on the CPU by running  `cargo run --release -- cpu` and see if it works.
+
 
 If any of the above fail, report the command you ran and their output in the section below.
 
